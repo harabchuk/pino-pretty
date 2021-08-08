@@ -16,9 +16,22 @@ const {
 } = require('./lib/utils')
 
 const bourne = require('@hapi/bourne')
+
+const trimJson = input => {
+  let inputLine = input
+  if (!input.startsWith('{') || !input.endsWith('}')) {
+    const first = input.indexOf('{')
+    const last = input.lastIndexOf('}')
+    if (first > -1 && last > -1) {
+      inputLine = input.slice(first, last + 1)
+    }
+  }
+  return inputLine
+}
+
 const jsonParser = input => {
   try {
-    return { value: bourne.parse(input, { protoAction: 'remove' }) }
+    return { value: bourne.parse(trimJson(input), { protoAction: 'remove' }) }
   } catch (err) {
     return { err }
   }
